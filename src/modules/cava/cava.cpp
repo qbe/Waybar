@@ -35,7 +35,8 @@ void waybar::modules::cava::Cava::pause_resume() { backend_->doPauseResume(); }
 auto waybar::modules::cava::Cava::onUpdate(const std::string& input) -> void {
   if (silence_) {
     label_.get_style_context()->remove_class("silent");
-    label_.get_style_context()->add_class("updated");
+    if (!label_.get_style_context()->has_class("updated"))
+      label_.get_style_context()->add_class("updated");
   }
   label_text_.clear();
   for (auto& ch : input)
@@ -48,7 +49,8 @@ auto waybar::modules::cava::Cava::onUpdate(const std::string& input) -> void {
 }
 auto waybar::modules::cava::Cava::onSilence() -> void {
   if (!silence_) {
-    label_.get_style_context()->remove_class("updated");
+    if (label_.get_style_context()->has_class("updated"))
+      label_.get_style_context()->remove_class("updated");
 
     if (hide_on_silence_)
       label_.hide();
